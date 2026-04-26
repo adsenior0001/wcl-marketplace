@@ -1,0 +1,38 @@
+<div style="padding: 2rem; max-width: 400px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); background-color: white;">
+  <h2 style="text-align: center; color: #005A8C;">{{ isLoginMode ? 'Login' : 'Register' }}</h2>
+  <p style="text-align: center; color: #666;">
+    {{ isLoginMode ? 'Welcome back to WCL Marketplace' : 'Create an account to get started' }}
+  </p>
+
+  <p style="color: red; text-align: center; font-weight: bold;" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </p>
+
+  <form (ngSubmit)="onSubmit()">
+    
+    <div style="margin-bottom: 1rem;">
+      <label>Email:</label><br>
+      <input type="email" name="email" [(ngModel)]="userData.email" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+    </div>
+
+    <div style="margin-bottom: 1rem;">
+      <label>Password:</label><br>
+      <input type="password" name="password" [(ngModel)]="userData.password" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+    </div>
+
+    <div *ngIf="!isLoginMode" style="margin-bottom: 1rem;">
+      <label>Company Name:</label><br>
+      <input type="text" name="company" [(ngModel)]="userData.companyName" required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+    </div>
+
+    <button type="submit" style="width: 100%; padding: 10px; background-color: #005A8C; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; margin-top: 10px;">
+      {{ isLoginMode ? 'Secure Login' : 'Create Account' }}
+    </button>
+  </form>
+
+  <div style="text-align: center; margin-top: 20px;">
+    <button type="button" (click)="toggleMode()" style="background: none; border: none; color: #005A8C; text-decoration: underline; cursor: pointer; font-size: 0.9rem;">
+      {{ isLoginMode ? "Don't have an account? Register here." : "Already have an account? Login here." }}
+    </button>
+  </div>
+</div>

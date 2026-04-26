@@ -1,0 +1,25 @@
+# Stage 1: Build the application
+FROM eclipse-temurin:21-jdk-alpine AS builder
+WORKDIR /app
+
+# Copy the parent Gradle wrappers and configuration
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+
+# Copy all source modules (Gradle needs them present if they are in settings.gradle)
+COPY api-gateway api-gateway
+COPY user-service user-service
+COPY product-service product-service
+COPY order-service order-service
+
+# Build ONLY the order service using the multi-module command
+RUN ./gradlew :order-service:bootJar -x test
+
+# Stage 2: Run the application
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+COPY --from=builder /app/order-service/build/libs/*.jar app.jar
+EXPOSE 8083
+ENTRYPOINT ["java", "-jar", "app.jar"]

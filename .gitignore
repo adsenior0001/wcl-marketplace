@@ -1,0 +1,56 @@
+# ==========================================
+# Java / Spring Boot / Gradle / Maven
+# ==========================================
+**/target/
+**/build/
+**/.gradle/
+**/bin/
+**/out/
+**/*.class
+**/*.jar
+**/*.war
+**/*.zip
+**/*.tar
+**/*.gz
+# Giant memory snapshots (The cause of your recent error)
+*.hprof
+
+# ==========================================
+# Angular / Node.js
+# ==========================================
+**/node_modules/
+**/dist/
+**/tmp/
+**/.angular/
+**/bower_components/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+
+# ==========================================
+# Docker & Infrastructure
+# ==========================================
+# Ignore specific environment files if they contain secrets
+# .env
+# .env.local
+
+# ==========================================
+# IDEs and Editors
+# ==========================================
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Other
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.bak

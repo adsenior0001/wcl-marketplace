@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: user-service
+  datasource:
+    # We will spin up a local PostgreSQL database later, but this is the connection string
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/wcl_users
+    username: myuser
+    password: mypassword
+  jpa:
+    hibernate:
+      # This tells Hibernate to automatically create our database tables based on our Java code
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true # Great for debugging, prints the SQL queries to the console
+
+  Kafka:
+    bootstrap-servers: ${KAFKA_HOST:localhost}:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+server:
+  port: 8081 # Each microservice needs its own port. API Gateway will handle routing later.

@@ -1,0 +1,65 @@
+<div class="dashboard-container">
+  <header>
+    <h2>Marketplace Admin & Inventory</h2>
+  </header>
+
+  <div *ngIf="uiMessage" class="alert-banner" [ngClass]="{'error': isError, 'success': !isError}">
+    {{ uiMessage }}
+  </div>
+
+  <div class="dashboard-layout">
+    <section class="form-section">
+      <h3>Add New Product</h3>
+      <form (ngSubmit)="onSubmit()" #productForm="ngForm">
+        <div class="form-group">
+          <label for="sku">SKU</label>
+          <input type="text" id="sku" name="sku" [(ngModel)]="newProduct.sku" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="name">Product Name</label>
+          <input type="text" id="name" name="name" [(ngModel)]="newProduct.name" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="basePrice">Price ($)</label>
+          <input type="number" id="basePrice" name="basePrice" [(ngModel)]="newProduct.basePrice" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="stockQuantity">Initial Stock</label>
+          <input type="number" id="stockQuantity" name="stockQuantity" [(ngModel)]="newProduct.stockQuantity" required>
+        </div>
+
+        <button type="submit" [disabled]="!productForm.valid || isProcessing">
+          Create Product
+        </button>
+      </form>
+    </section>
+
+    <section class="inventory-section">
+      <div class="inventory-header">
+        <h3>Current Stock</h3>
+        <button (click)="loadProducts()" [disabled]="loading || isProcessing">↻ Refresh</button>
+      </div>
+
+      <div *ngIf="loading">Loading inventory...</div>
+
+      <div class="product-grid" *ngIf="!loading">
+        <div class="product-card" *ngFor="let product of products" [class.out-of-stock]="product.stockQuantity === 0">
+          <h4>{{ product.name }}</h4>
+          <p>SKU: {{ product.sku }}</p>
+          <p>Price: ${{ product.basePrice }}</p>
+          <p>Stock: <strong [class.text-danger]="product.stockQuantity === 0">{{ product.stockQuantity }}</strong></p>
+          
+          <button 
+            class="buy-btn"
+            (click)="buyProduct(product.sku)" 
+            [disabled]="product.stockQuantity === 0 || isProcessing">
+            {{ product.stockQuantity > 0 ? 'Simulate Purchase' : 'Out of Stock' }}
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

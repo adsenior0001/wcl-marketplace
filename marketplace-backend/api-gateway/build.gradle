@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+}
+
+group = 'com.wcl'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '21' // Match the Java version you are using
+}
+
+ext {
+    // This locks in the Spring Cloud version compatible with your Spring Boot 3.2.x version
+    set('springCloudVersion', "2023.0.1")
+}
+
+dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
+    // JWT Dependencies
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

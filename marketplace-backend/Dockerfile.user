@@ -1,0 +1,24 @@
+# Stage 1: Build
+FROM eclipse-temurin:21-jdk-alpine AS build
+WORKDIR /workspace
+
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle settings.gradle ./
+
+# Copy ALL source modules to satisfy settings.gradle
+COPY shared-core shared-core
+COPY user-service user-service
+COPY product-service product-service
+COPY api-gateway api-gateway
+
+# Build the specific module
+RUN ./gradlew :user-service:bootJar -x test
+
+# Stage 2: Runtime
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+COPY --from=build /workspace/user-service/build/libs/*-SNAPSHOT.jar app.jar
+
+EXPOSE 8081
+ENTRYPOINT ["java", "-jar", "app.jar"]

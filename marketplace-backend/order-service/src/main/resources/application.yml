@@ -1,0 +1,26 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: order-service
+
+  # Connects to the new PostgreSQL database we will add to Docker later
+  datasource:
+    url: jdbc:postgresql://postgres-orders:5432/orders_db
+    username: wcl_admin
+    password: wcl_password
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Connects to our existing Kafka broker
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

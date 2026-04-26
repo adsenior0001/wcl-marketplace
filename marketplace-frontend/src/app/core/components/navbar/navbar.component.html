@@ -1,0 +1,9 @@
+<nav style="background-color: #005A8C; padding: 1rem; display: flex; justify-content: space-between; align-items: center; color: white;">
+  <h1 style="margin: 0; font-size: 1.5rem;">WCL Marketplace</h1>
+  
+  <div *ngIf="authService.isLoggedIn()">
+    <button (click)="authService.logout()" style="background-color: #dc3545; color: white; border: none; padding: 8px 16px; cursor: pointer; border-radius: 4px;">
+      Logout
+    </button>
+  </div>
+</nav>
