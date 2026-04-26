@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://<YOUR_GATEWAY_EXTERNAL_IP>:8080/api/v1',
+  apiUrl: 'http://52.191.217.132:8080/api/v1',
 };
