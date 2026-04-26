@@ -27,33 +27,32 @@ jobs:
       - name: ACR Login
         run: az acr login --name ${{ env.ACR_NAME }}
 
-      # 4. Build and Push the Product Service
+      # 4. Build and Push Product Service
       - name: Build and Push Product Service
         run: |
-          docker build -f marketplace-infra/docker/Dockerfile.product -t ${{ env.ACR_NAME }}.azurecr.io/product-service:latest .
+          docker build -f marketplace-backend/Dockerfile.product -t ${{ env.ACR_NAME }}.azurecr.io/product-service:latest marketplace-backend/
           docker push ${{ env.ACR_NAME }}.azurecr.io/product-service:latest
 
-      # 5. Build and Push the Order Service
+      # 5. Build and Push Order Service
       - name: Build and Push Order Service
         run: |
-          docker build -f marketplace-infra/docker/Dockerfile.order -t ${{ env.ACR_NAME }}.azurecr.io/order-service:latest .
+          docker build -f marketplace-backend/Dockerfile.order -t ${{ env.ACR_NAME }}.azurecr.io/order-service:latest marketplace-backend/
           docker push ${{ env.ACR_NAME }}.azurecr.io/order-service:latest
 
-      # 6. Build and Push the User Service
+      # 6. Build and Push User Service
       - name: Build and Push User Service
         run: |
-          docker build -f marketplace-infra/docker/Dockerfile.user -t ${{ env.ACR_NAME }}.azurecr.io/user-service:latest .
+          docker build -f marketplace-backend/Dockerfile.user -t ${{ env.ACR_NAME }}.azurecr.io/user-service:latest marketplace-backend/
           docker push ${{ env.ACR_NAME }}.azurecr.io/user-service:latest
 
-      # 7. Build and Push the API Gateway
+      # 7. Build and Push API Gateway
       - name: Build and Push API Gateway
         run: |
-          docker build -f marketplace-infra/docker/Dockerfile.gateway -t ${{ env.ACR_NAME }}.azurecr.io/api-gateway:latest .
+          docker build -f marketplace-backend/Dockerfile.gateway -t ${{ env.ACR_NAME }}.azurecr.io/api-gateway:latest marketplace-backend/
           docker push ${{ env.ACR_NAME }}.azurecr.io/api-gateway:latest
 
-      # 8. Build and Push the Frontend Angular SPA
-      # (Assuming standard Angular Dockerfile location and context)
+      # 8. Build and Push Frontend Angular SPA
       - name: Build and Push Frontend
         run: |
-          docker build -f marketplace-frontend/Dockerfile -t ${{ env.ACR_NAME }}.azurecr.io/frontend:latest marketplace-frontend
+          docker build -f marketplace-frontend/Dockerfile -t ${{ env.ACR_NAME }}.azurecr.io/frontend:latest marketplace-frontend/
           docker push ${{ env.ACR_NAME }}.azurecr.io/frontend:latest
