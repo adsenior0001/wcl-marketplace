@@ -7,7 +7,7 @@ on:
 
 env:
   # CRITICAL: Replace 'acrwclmarketplacexyz' with the exact name of your Azure Container Registry
-  ACR_NAME: acrwclmarketplacexyz
+  ACR_NAME: wclmarketplacexyz
 
 jobs:
   build-and-push:
