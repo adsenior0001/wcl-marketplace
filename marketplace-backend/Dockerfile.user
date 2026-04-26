@@ -4,6 +4,10 @@ WORKDIR /workspace
 
 COPY gradlew .
 COPY gradle gradle
+
+# Fix Windows CRLF line endings and ensure execution permissions
+RUN sed -i 's/\r$//' gradlew && chmod +x gradlew
+
 COPY build.gradle settings.gradle ./
 
 # Copy ALL source modules to satisfy settings.gradle

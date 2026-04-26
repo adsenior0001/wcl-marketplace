@@ -5,6 +5,10 @@ WORKDIR /app
 # Copy the parent Gradle wrappers and configuration
 COPY gradlew .
 COPY gradle gradle
+
+# Fix Windows CRLF line endings and ensure execution permissions
+RUN sed -i 's/\r$//' gradlew && chmod +x gradlew
+
 COPY build.gradle .
 COPY settings.gradle .
 

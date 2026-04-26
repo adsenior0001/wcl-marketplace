@@ -12,6 +12,8 @@
 **/*.zip
 **/*.tar
 **/*.gz
+# Exception: Keep the Gradle wrapper executable
+!**/gradle/wrapper/gradle-wrapper.jar
 # Giant memory snapshots (The cause of your recent error)
 *.hprof
 
