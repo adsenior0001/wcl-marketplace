@@ -142,7 +142,7 @@ spec:
 
 
 # ==========================================
-# 4. API GATEWAY (Publicly Accessible)
+# 4. API GATEWAY (Publicly Accessible + CORS)
 # ==========================================
 ---
 apiVersion: apps/v1
@@ -171,6 +171,13 @@ spec:
               value: "product-service"
             - name: ORDER_SERVICE_HOST
               value: "order-service"
+            # --- GLOBAL CORS CONFIGURATION ADDED HERE ---
+            - name: SPRING_CLOUD_GATEWAY_GLOBALCORS_CORS_CONFIGURATIONS_[/**]_ALLOWEDORIGINS
+              value: "*"
+            - name: SPRING_CLOUD_GATEWAY_GLOBALCORS_CORS_CONFIGURATIONS_[/**]_ALLOWEDMETHODS
+              value: "GET,POST,PUT,DELETE,OPTIONS"
+            - name: SPRING_CLOUD_GATEWAY_GLOBALCORS_CORS_CONFIGURATIONS_[/**]_ALLOWEDHEADERS
+              value: "*"
 ---
 apiVersion: v1
 kind: Service
@@ -221,4 +228,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80
+      targetPort:
