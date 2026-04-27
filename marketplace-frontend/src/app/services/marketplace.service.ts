@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
-import { EventSourcePolyfill } from 'event-source-polyfill'; // Added Polyfill
+import { EventSourcePolyfill } from 'event-source-polyfill';
+import { environment } from '../../environments/environment'; // <-- Imported environment
 
 export interface Product {
   id?: string;
@@ -12,11 +13,11 @@ export interface Product {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MarketplaceService {
-  // Pointing directly to our Spring Cloud API Gateway via Docker Nginx (port 80)
-  private readonly GATEWAY_URL = 'http://localhost:8080/api/v1';
+  // Pointing dynamically to our Azure Gateway via the environment file
+  private readonly GATEWAY_URL = environment.apiUrl; // <-- The Localhost Ghost is banished
 
   constructor(private http: HttpClient) {}
 
@@ -25,18 +26,18 @@ export class MarketplaceService {
    * (Auth headers are automatically attached by jwt.interceptor.ts)
    */
   getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.GATEWAY_URL}/products`).pipe(
-      catchError(this.handleError)
-    );
+    return this.http
+      .get<Product[]>(`${this.GATEWAY_URL}/products`)
+      .pipe(catchError(this.handleError));
   }
 
   /**
    * Submits a new product to the Product Service.
    */
   createProduct(productData: any): Observable<any> {
-    return this.http.post(`${this.GATEWAY_URL}/products`, productData).pipe(
-      catchError(this.handleError)
-    );
+    return this.http
+      .post(`${this.GATEWAY_URL}/products`, productData)
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -44,11 +45,11 @@ export class MarketplaceService {
    */
   placeOrder(sku: string, quantity: number): Observable<string> {
     const payload = { sku, quantity };
-    return this.http.post(`${this.GATEWAY_URL}/orders`, payload, {
-      responseType: 'text' // Expecting a UUID string, not a JSON object
-    }).pipe(
-      catchError(this.handleError)
-    );
+    return this.http
+      .post(`${this.GATEWAY_URL}/orders`, payload, {
+        responseType: 'text', // Expecting a UUID string, not a JSON object
+      })
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -56,17 +57,20 @@ export class MarketplaceService {
    * Uses EventSourcePolyfill to ensure the JWT token is sent with the connection.
    */
   listenToInventoryUpdates(): Observable<Product> {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       // Grab the token manually for the stream
       const token = localStorage.getItem('jwt_token');
 
       // Use the Polyfill to attach the Authorization header
-      const eventSource = new EventSourcePolyfill(`${this.GATEWAY_URL}/products/stream`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
+      const eventSource = new EventSourcePolyfill(
+        `${this.GATEWAY_URL}/products/stream`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
       // Listen for our specific "inventory-update" event emitted by the backend
       eventSource.addEventListener('inventory-update', (event: any) => {
         const updatedProduct = JSON.parse(event.data);
@@ -78,12 +82,14 @@ export class MarketplaceService {
       };
 
       // Cleanup when the component unmounts or unsubscribes
-      return () => eventSource.close(); 
+      return () => eventSource.close();
     });
   }
 
   private handleError(error: any) {
     console.error('API Error:', error);
-    return throwError(() => new Error(error.message || 'Server error occurred'));
+    return throwError(
+      () => new Error(error.message || 'Server error occurred'),
+    );
   }
 }
