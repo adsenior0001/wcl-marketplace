@@ -142,7 +142,7 @@ spec:
 
 
 # ==========================================
-# 4. API GATEWAY (Publicly Accessible + CORS)
+# 4. API GATEWAY (Public + Bulletproof CORS)
 # ==========================================
 ---
 apiVersion: apps/v1
@@ -171,13 +171,9 @@ spec:
               value: "product-service"
             - name: ORDER_SERVICE_HOST
               value: "order-service"
-            # --- GLOBAL CORS CONFIGURATION ADDED HERE ---
-            - name: SPRING_CLOUD_GATEWAY_GLOBALCORS_CORS_CONFIGURATIONS_[/**]_ALLOWEDORIGINS
-              value: "*"
-            - name: SPRING_CLOUD_GATEWAY_GLOBALCORS_CORS_CONFIGURATIONS_[/**]_ALLOWEDMETHODS
-              value: "GET,POST,PUT,DELETE,OPTIONS"
-            - name: SPRING_CLOUD_GATEWAY_GLOBALCORS_CORS_CONFIGURATIONS_[/**]_ALLOWEDHEADERS
-              value: "*"
+            # --- THE BULLETPROOF CORS FIX ---
+            - name: SPRING_APPLICATION_JSON
+              value: '{"spring":{"cloud":{"gateway":{"globalcors":{"corsConfigurations":{"[/**]":{"allowedOrigins":["*"],"allowedMethods":["GET","POST","PUT","DELETE","OPTIONS"],"allowedHeaders":["*"]}}}}}}}'
 ---
 apiVersion: v1
 kind: Service
