@@ -23,10 +23,10 @@ spec:
           env:
             - name: MONGO_HOST
               value: "mongo-db"
-            - name: SPRING_DATA_MONGODB_URI
-              value: "mongodb://mongo-db:27017/product_db"
             - name: KAFKA_HOST
               value: "kafka"
+            - name: SPRING_DATA_MONGODB_URI
+              value: "mongodb://mongo-db:27017/product_db"
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: "kafka:9092"
 ---
@@ -67,16 +67,18 @@ spec:
           ports:
             - containerPort: 8083
           env:
+            - name: KAFKA_HOST
+              value: "kafka"
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://postgres-orders:5432/orders_db"
             - name: SPRING_DATASOURCE_USERNAME
               value: "wcl_admin"
             - name: SPRING_DATASOURCE_PASSWORD
               value: "wcl_password"
-            - name: KAFKA_HOST
-              value: "kafka"
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: "kafka:9092"
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: "update"
 ---
 apiVersion: v1
 kind: Service
@@ -117,16 +119,18 @@ spec:
           env:
             - name: DB_HOST
               value: "postgres-db"
+            - name: KAFKA_HOST
+              value: "kafka"
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://postgres-db:5432/wcl_users"
             - name: SPRING_DATASOURCE_USERNAME
               value: "myuser"
             - name: SPRING_DATASOURCE_PASSWORD
               value: "mypassword"
-            - name: KAFKA_HOST
-              value: "kafka"
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               value: "kafka:9092"
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: "update"
 ---
 apiVersion: v1
 kind: Service
@@ -142,7 +146,7 @@ spec:
 
 
 # ==========================================
-# 4. API GATEWAY (Public + Bulletproof CORS)
+# 4. API GATEWAY (Public + CORS Configuration)
 # ==========================================
 ---
 apiVersion: apps/v1
@@ -171,7 +175,6 @@ spec:
               value: "product-service"
             - name: ORDER_SERVICE_HOST
               value: "order-service"
-            # --- THE BULLETPROOF CORS FIX ---
             - name: SPRING_APPLICATION_JSON
               value: '{"spring":{"cloud":{"gateway":{"globalcors":{"corsConfigurations":{"[/**]":{"allowedOrigins":["*"],"allowedMethods":["GET","POST","PUT","DELETE","OPTIONS"],"allowedHeaders":["*"]}}}}}}}'
 ---
@@ -190,7 +193,7 @@ spec:
 
 
 # ==========================================
-# 5. FRONTEND SPA (Publicly Accessible)
+# 5. FRONTEND SPA (Public)
 # ==========================================
 ---
 apiVersion: apps/v1
@@ -224,4 +227,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort:
+      targetPort: 80
